@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Transition } from "react-transition-group";
+import { IChildStyles } from "./index";
 
 interface ITransitioningComponentProps {
   enter: any;
@@ -7,9 +8,10 @@ interface ITransitioningComponentProps {
   direction: any;
   appear: any;
   children: any;
-  carouselElemWidth: number;
   parentRef: HTMLDivElement | null;
-  transitionTime: number;
+  childStyles: IChildStyles;
+  hideOnLeave?: boolean;
+  initialShowWidthPercentage?: number;
 }
 
 const TransitioningComponent = ({
@@ -18,28 +20,34 @@ const TransitioningComponent = ({
   direction,
   appear,
   children,
-  carouselElemWidth,
   parentRef,
-  transitionTime
+  childStyles,
+  hideOnLeave,
+  initialShowWidthPercentage
 }: ITransitioningComponentProps) => {
   let carouselElemMargin = 0;
   if (parentRef && parentRef.parentElement) {
     carouselElemMargin =
-      parentRef.parentElement.offsetWidth - carouselElemWidth;
+      parentRef.parentElement.offsetWidth - childStyles.width;
   }
+  let farDistance = childStyles.width + carouselElemMargin;
+  if (hideOnLeave && initialShowWidthPercentage) {
+    // farDistance =
+    //   childStyles.width -
+    //   (childStyles.width * initialShowWidthPercentage) / 100;
+    farDistance = childStyles.width * (1 - initialShowWidthPercentage / 100);
+  }
+  const wrapperStyleFarRight = `translate3d(${farDistance}px, 0, 0)`;
+  const wrapperStyleFarLeft = `translate3d(-${farDistance}px, 0, 0)`;
+  const wrapperStyleFCenter = "translate3d(0, 0, 0)";
+  const carouselTransitionTime = childStyles.transition + "s";
   return (
     <Transition in={enter} timeout={1} appear={appear}>
       {state => {
-        const wrapperStyleFarRight = `translate3d(${carouselElemWidth +
-          carouselElemMargin}px, 0, 0)`;
-        const wrapperStyleFarLeft = `translate3d(-${carouselElemWidth +
-          carouselElemMargin}px, 0, 0)`;
-        const wrapperStyleFCenter = "translate3d(0, 0, 0)";
-        const carouselTransitionTime = transitionTime + "s";
-
         let wrapperStyles = {
           transform: wrapperStyleFarRight,
-          transition: "0"
+          transition: "0",
+          opacity: 1
         };
         switch (state) {
           case "entering":
@@ -47,20 +55,24 @@ const TransitioningComponent = ({
               ? wrapperStyleFarLeft
               : wrapperStyleFarRight;
             wrapperStyles.transition = "0";
+            wrapperStyles.opacity = hideOnLeave ? 0 : 1;
             break;
           case "entered":
             wrapperStyles.transform = wrapperStyleFCenter;
             wrapperStyles.transition = carouselTransitionTime;
+            wrapperStyles.opacity = 1;
             break;
           case "exiting":
             wrapperStyles.transform = wrapperStyleFCenter;
             wrapperStyles.transition = "0";
+            wrapperStyles.opacity = 1;
             break;
           case "exited":
             wrapperStyles.transform = !!direction
               ? wrapperStyleFarRight
               : wrapperStyleFarLeft;
             wrapperStyles.transition = carouselTransitionTime;
+            wrapperStyles.opacity = hideOnLeave ? 0 : 1;
             break;
           default:
             throw new Error("Transition has no state");
@@ -68,7 +80,7 @@ const TransitioningComponent = ({
         return (
           <div
             className={classes.rtgWrapper}
-            style={{ ...wrapperStyles, width: carouselElemWidth }}
+            style={{ ...wrapperStyles, width: childStyles.width }}
           >
             {children}
           </div>

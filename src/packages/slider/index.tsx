@@ -3,15 +3,22 @@ import carouselStyle from "./styles";
 import injectSheet from "react-jss";
 import TransitioningComponent from "./TransitioningComponent";
 
+export interface IChildStyles {
+  width: number;
+  height: number;
+  transition: number;
+}
+
 interface ICarouselProps {
   watchProp: any;
   childProps: any;
   direction: any;
   classes: any;
   children: JSX.Element;
-  carouselElemWidth: number;
-  carouselElemHeight: number;
-  transitionTime: number;
+  childStyles: IChildStyles;
+  slideOnAppear?: boolean;
+  hideOnLeave?: boolean;
+  initialShowWidthPercentage?: number;
 }
 
 interface ICarouselState {
@@ -56,8 +63,10 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     const {
       direction,
       classes,
-      carouselElemWidth,
-      transitionTime
+      childStyles,
+      slideOnAppear,
+      hideOnLeave,
+      initialShowWidthPercentage
     } = this.props;
     let clonedElems = [];
     nextWatchProp &&
@@ -68,10 +77,11 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
           classes={classes}
           direction={direction}
           key={nextWatchProp}
-          appear={!!prevWatchProp}
-          carouselElemWidth={carouselElemWidth}
+          appear={slideOnAppear || !!prevWatchProp}
           parentRef={this.selfRef}
-          transitionTime={transitionTime}
+          childStyles={childStyles}
+          hideOnLeave={hideOnLeave}
+          initialShowWidthPercentage={initialShowWidthPercentage}
         >
           {React.cloneElement(this.props.children, nextChildProps)}
         </TransitioningComponent>
@@ -86,9 +96,10 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
           direction={direction}
           key={prevWatchProp}
           appear={true}
-          carouselElemWidth={carouselElemWidth}
           parentRef={this.selfRef}
-          transitionTime={transitionTime}
+          childStyles={childStyles}
+          hideOnLeave={hideOnLeave}
+          initialShowWidthPercentage={initialShowWidthPercentage}
         >
           {React.cloneElement(this.props.children, prevChildProps)}
         </TransitioningComponent>
@@ -97,14 +108,14 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
   };
 
   render() {
-    const { carouselElemWidth, carouselElemHeight } = this.props;
+    const { width, height } = this.props.childStyles;
     return (
       <div
         ref={elem => (this.selfRef = elem)}
         className={this.props.classes.rtgList}
         style={{
-          width: carouselElemWidth,
-          height: carouselElemHeight
+          width,
+          height
         }}
       >
         {this.getCLonedElems()}

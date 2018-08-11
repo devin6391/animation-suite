@@ -3,7 +3,7 @@ import injectSheet from "react-jss";
 import KeyboardLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import SingleElement from "./SingleElement";
-import Slider from "../../packages/slider";
+import Slider, { IChildStyles } from "../../packages/slider";
 import { carouselComponentStyles } from "./styles";
 import { CarouselData } from "./AppBar";
 import { carouselElemWidth, carouselElemHeight } from "./singleElemStyles";
@@ -72,6 +72,11 @@ class SliderWithAnimation extends React.Component<
       text: currData.text,
       classes: null
     };
+    const childStyles: IChildStyles = {
+      width: carouselElemWidth,
+      height: carouselElemHeight,
+      transition: 0.3
+    };
     return (
       <div className={classes.root}>
         <div className={classes.leftMove} onClick={this.slideLeftClick}>
@@ -83,9 +88,7 @@ class SliderWithAnimation extends React.Component<
             direction={direction}
             childProps={carouselCompProps}
             classes={null}
-            carouselElemWidth={carouselElemWidth}
-            carouselElemHeight={carouselElemHeight}
-            transitionTime={0.3}
+            childStyles={childStyles}
           >
             <SingleElement {...carouselCompProps} />
           </Slider>
