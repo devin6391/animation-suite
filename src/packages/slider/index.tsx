@@ -8,7 +8,7 @@ interface ICarouselProps {
     childProps: any;
     direction: any;
     classes: any;
-    children: React.ReactElement<any>;
+    children: JSX.Element;
 }
 
 interface ICarouselState {
