@@ -1,5 +1,5 @@
 import * as React from "react";
-import injectSheet from 'react-jss';
+import injectSheet from "react-jss";
 import { carouselComponentStyles } from "./styles";
 import KeyboardLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardRightIcon from "@material-ui/icons/KeyboardArrowRight";
@@ -7,18 +7,21 @@ import SingleElement from "./SingleElement";
 import Slider from "../../packages/slider";
 
 interface SliderWithAnimationProps {
-    dataArr: any[];
-    classes: any;
+  dataArr: any[];
+  classes: any;
 }
 
 interface SliderWithAnimationStates {
-    currIndex: number;
-    prevIndex: number;
-    appearDirty: boolean;
-    direction: number;
+  currIndex: number;
+  prevIndex: number;
+  appearDirty: boolean;
+  direction: number;
 }
 
-class SliderWithAnimation extends React.Component<SliderWithAnimationProps, SliderWithAnimationStates> {
+class SliderWithAnimation extends React.Component<
+  SliderWithAnimationProps,
+  SliderWithAnimationStates
+> {
   state = {
     currIndex: 0,
     prevIndex: 0,
@@ -77,7 +80,7 @@ class SliderWithAnimation extends React.Component<SliderWithAnimationProps, Slid
             watchProp={currData.id}
             direction={direction}
             childProps={carouselCompProps}
-            classes={{}}
+            classes={null}
           >
             <SingleElement {...carouselCompProps} />
           </Slider>
@@ -90,6 +93,4 @@ class SliderWithAnimation extends React.Component<SliderWithAnimationProps, Slid
   }
 }
 
-export default injectSheet(carouselComponentStyles)(
-    SliderWithAnimation
-);
+export default injectSheet(carouselComponentStyles)(SliderWithAnimation);

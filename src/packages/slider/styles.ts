@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-jss';
+import { StyleSheet } from "react-jss";
 
 export const carouselElemWidth = 345;
 export const carouselElemMargin = 33;

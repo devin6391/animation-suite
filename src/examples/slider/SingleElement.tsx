@@ -5,10 +5,10 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 
 interface SingleElementProps {
-    classes: any;
-    imageUrl: string;
-    title: string;
-    text: string;
+  classes: any;
+  imageUrl: string;
+  title: string;
+  text: string;
 }
 
 export default ({ classes, imageUrl, title, text }: SingleElementProps) => (

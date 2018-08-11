@@ -1,23 +1,22 @@
 import * as React from "react";
 import carouselStyle from "./styles";
-import TransitioningComponent from './TransitioningComponent';
-import injectSheet from 'react-jss';
+import TransitioningComponent from "./TransitioningComponent";
+import injectSheet from "react-jss";
 
 interface ICarouselProps {
-    watchProp: any;
-    childProps: any;
-    direction: any;
-    classes: any;
-    children: JSX.Element;
+  watchProp: any;
+  childProps: any;
+  direction: any;
+  classes: any;
+  children: JSX.Element;
 }
 
 interface ICarouselState {
-    prevWatchProp: any;
-    prevChildProps: any;
-    nextWatchProp: any;
-    nextChildProps: any;
+  prevWatchProp: any;
+  prevChildProps: any;
+  nextWatchProp: any;
+  nextChildProps: any;
 }
-
 
 class Carousel extends React.Component<ICarouselProps, ICarouselState> {
   constructor(props: ICarouselProps) {
@@ -30,7 +29,10 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     };
   }
 
-  static getDerivedStateFromProps(nextProps: ICarouselProps, prevState: ICarouselState) {
+  static getDerivedStateFromProps(
+    nextProps: ICarouselProps,
+    prevState: ICarouselState
+  ) {
     return {
       prevWatchProp: prevState.nextWatchProp,
       prevChildProps: prevState.nextChildProps,
@@ -85,6 +87,4 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
   }
 }
 
-export default injectSheet(carouselStyle)(
-  Carousel
-);
+export default injectSheet(carouselStyle)(Carousel);

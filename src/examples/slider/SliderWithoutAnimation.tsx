@@ -1,5 +1,5 @@
 import * as React from "react";
-import injectSheet from 'react-jss';
+import injectSheet from "react-jss";
 import SingleElement from "./SingleElement";
 import {
   carouselComponentStyles,
@@ -10,11 +10,13 @@ import KeyboardLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardRightIcon from "@material-ui/icons/KeyboardArrowRight";
 
 interface SliderWithoutAnimationProps {
-    dataArr: any[];
-    classes: any;
+  dataArr: any[];
+  classes: any;
 }
 
-class SliderWithoutAnimation extends React.Component<SliderWithoutAnimationProps> {
+class SliderWithoutAnimation extends React.Component<
+  SliderWithoutAnimationProps
+> {
   state = {
     marginLeft: carouselElemMargin,
     currIndex: 0
@@ -74,6 +76,4 @@ class SliderWithoutAnimation extends React.Component<SliderWithoutAnimationProps
   }
 }
 
-export default injectSheet(carouselComponentStyles)(
-    SliderWithoutAnimation
-);
+export default injectSheet(carouselComponentStyles)(SliderWithoutAnimation);
