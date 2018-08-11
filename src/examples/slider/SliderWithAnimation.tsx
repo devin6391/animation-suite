@@ -6,6 +6,7 @@ import SingleElement from "./SingleElement";
 import Slider from "../../packages/slider";
 import { carouselComponentStyles } from "./styles";
 import { CarouselData } from "./AppBar";
+import { carouselElemWidth, carouselElemHeight } from "./singleElemStyles";
 
 interface SliderWithAnimationProps {
   dataArr: CarouselData[];
@@ -69,7 +70,7 @@ class SliderWithAnimation extends React.Component<
       imageUrl: currData.imageUrl,
       title: currData.title,
       text: currData.text,
-      classes: classes
+      classes: null
     };
     return (
       <div className={classes.root}>
@@ -82,6 +83,9 @@ class SliderWithAnimation extends React.Component<
             direction={direction}
             childProps={carouselCompProps}
             classes={null}
+            carouselElemWidth={carouselElemWidth}
+            carouselElemHeight={carouselElemHeight}
+            transitionTime={0.3}
           >
             <SingleElement {...carouselCompProps} />
           </Slider>

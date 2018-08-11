@@ -9,6 +9,9 @@ interface ICarouselProps {
   direction: any;
   classes: any;
   children: JSX.Element;
+  carouselElemWidth: number;
+  carouselElemHeight: number;
+  transitionTime: number;
 }
 
 interface ICarouselState {
@@ -29,6 +32,8 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     };
   }
 
+  private selfRef: HTMLDivElement | null;
+
   static getDerivedStateFromProps(
     nextProps: ICarouselProps,
     prevState: ICarouselState
@@ -48,7 +53,12 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
       nextWatchProp,
       nextChildProps
     } = this.state;
-    const { direction, classes } = this.props;
+    const {
+      direction,
+      classes,
+      carouselElemWidth,
+      transitionTime
+    } = this.props;
     let clonedElems = [];
     nextWatchProp &&
       nextChildProps &&
@@ -59,6 +69,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
           direction={direction}
           key={nextWatchProp}
           appear={!!prevWatchProp}
+          carouselElemWidth={carouselElemWidth}
+          parentRef={this.selfRef}
+          transitionTime={transitionTime}
         >
           {React.cloneElement(this.props.children, nextChildProps)}
         </TransitioningComponent>
@@ -73,6 +86,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
           direction={direction}
           key={prevWatchProp}
           appear={true}
+          carouselElemWidth={carouselElemWidth}
+          parentRef={this.selfRef}
+          transitionTime={transitionTime}
         >
           {React.cloneElement(this.props.children, prevChildProps)}
         </TransitioningComponent>
@@ -81,8 +97,18 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
   };
 
   render() {
+    const { carouselElemWidth, carouselElemHeight } = this.props;
     return (
-      <div className={this.props.classes.rtgList}>{this.getCLonedElems()}</div>
+      <div
+        ref={elem => (this.selfRef = elem)}
+        className={this.props.classes.rtgList}
+        style={{
+          width: carouselElemWidth,
+          height: carouselElemHeight
+        }}
+      >
+        {this.getCLonedElems()}
+      </div>
     );
   }
 }

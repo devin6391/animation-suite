@@ -3,11 +3,7 @@ import injectSheet from "react-jss";
 import KeyboardLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import SingleElement from "./SingleElement";
-import {
-  carouselComponentStyles,
-  carouselElemMargin,
-  carouselElemWidth
-} from "./styles";
+import { carouselComponentStyles } from "./styles";
 import { CarouselData } from "./AppBar";
 
 interface SliderWithoutAnimationProps {
@@ -16,7 +12,6 @@ interface SliderWithoutAnimationProps {
 }
 
 interface SliderWithoutAnimationStates {
-  marginLeft: number;
   currIndex: number;
 }
 
@@ -25,12 +20,11 @@ class SliderWithoutAnimation extends React.Component<
   SliderWithoutAnimationStates
 > {
   state = {
-    marginLeft: carouselElemMargin,
     currIndex: 0
   };
 
   slideLeftClick = () => {
-    let { marginLeft, currIndex } = this.state;
+    let { currIndex } = this.state;
     let maxIndex = this.props.dataArr.length - 1;
     if (currIndex > 0) {
       currIndex--;
@@ -39,12 +33,11 @@ class SliderWithoutAnimation extends React.Component<
     } else {
       throw Error(`Current Index of element can't go below 0`);
     }
-    marginLeft = -carouselElemWidth * currIndex + carouselElemMargin;
-    this.setState({ marginLeft, currIndex });
+    this.setState({ currIndex });
   };
 
   slideRightClick = () => {
-    let { marginLeft, currIndex } = this.state;
+    let { currIndex } = this.state;
     let maxIndex = this.props.dataArr.length - 1;
     if (currIndex < maxIndex) {
       currIndex++;
@@ -53,8 +46,7 @@ class SliderWithoutAnimation extends React.Component<
     } else {
       throw Error(`Current Index of element can't go beyond ${maxIndex}`);
     }
-    marginLeft = -carouselElemWidth * currIndex + carouselElemMargin;
-    this.setState({ marginLeft, currIndex });
+    this.setState({ currIndex });
   };
 
   render() {
@@ -66,14 +58,12 @@ class SliderWithoutAnimation extends React.Component<
           <KeyboardLeftIcon />
         </div>
         <div className={classes.carouselContainer}>
-          <div className={classes.itemList}>
-            <SingleElement
-              imageUrl={data.imageUrl}
-              title={data.title}
-              text={data.text}
-              classes={classes}
-            />
-          </div>
+          <SingleElement
+            imageUrl={data.imageUrl}
+            title={data.title}
+            text={data.text}
+            classes={null}
+          />
         </div>
         <div className={classes.rightMove} onClick={this.slideRightClick}>
           <KeyboardRightIcon />
