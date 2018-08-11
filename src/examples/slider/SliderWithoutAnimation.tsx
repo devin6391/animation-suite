@@ -1,21 +1,28 @@
 import * as React from "react";
 import injectSheet from "react-jss";
+import KeyboardLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import SingleElement from "./SingleElement";
 import {
   carouselComponentStyles,
   carouselElemMargin,
   carouselElemWidth
 } from "./styles";
-import KeyboardLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import { CarouselData } from "./AppBar";
 
 interface SliderWithoutAnimationProps {
-  dataArr: any[];
+  dataArr: CarouselData[];
   classes: any;
 }
 
+interface SliderWithoutAnimationStates {
+  marginLeft: number;
+  currIndex: number;
+}
+
 class SliderWithoutAnimation extends React.Component<
-  SliderWithoutAnimationProps
+  SliderWithoutAnimationProps,
+  SliderWithoutAnimationStates
 > {
   state = {
     marginLeft: carouselElemMargin,

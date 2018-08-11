@@ -1,14 +1,14 @@
 import * as React from "react";
-import injectSheet from "react-jss";
 import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import SliderWithoutAnimation from "./SliderWithoutAnimation";
+import injectSheet from "react-jss";
 import SliderWithAnimation from "./SliderWithAnimation";
-import { appBarStyles } from "./styles";
+import SliderWithoutAnimation from "./SliderWithoutAnimation";
+import Tab from "@material-ui/core/Tab";
 import TabContainer from "../common/TabContainer";
+import Tabs from "@material-ui/core/Tabs";
+import { appBarStyles } from "./styles";
 
-interface CarouselData {
+export interface CarouselData {
   id: number;
   imageUrl: string;
   title: string;

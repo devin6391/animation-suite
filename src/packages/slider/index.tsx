@@ -1,7 +1,7 @@
 import * as React from "react";
 import carouselStyle from "./styles";
-import TransitioningComponent from "./TransitioningComponent";
 import injectSheet from "react-jss";
+import TransitioningComponent from "./TransitioningComponent";
 
 interface ICarouselProps {
   watchProp: any;
@@ -58,7 +58,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
           classes={classes}
           direction={direction}
           key={nextWatchProp}
-          appear={true}
+          appear={!!prevWatchProp}
         >
           {React.cloneElement(this.props.children, nextChildProps)}
         </TransitioningComponent>

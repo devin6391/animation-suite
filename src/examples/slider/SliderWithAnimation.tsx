@@ -1,13 +1,14 @@
 import * as React from "react";
 import injectSheet from "react-jss";
-import { carouselComponentStyles } from "./styles";
 import KeyboardLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import SingleElement from "./SingleElement";
 import Slider from "../../packages/slider";
+import { carouselComponentStyles } from "./styles";
+import { CarouselData } from "./AppBar";
 
 interface SliderWithAnimationProps {
-  dataArr: any[];
+  dataArr: CarouselData[];
   classes: any;
 }
 
