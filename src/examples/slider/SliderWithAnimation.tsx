@@ -14,8 +14,7 @@ import { carouselElemWidth, carouselElemHeight } from "./singleElemStyles";
 const childStyles: ISliderChildStyles = {
   width: carouselElemWidth,
   height: carouselElemHeight,
-  enterTransitionTime: 0.6,
-  exitTransitionTime: 0.3
+  transitionTime: 0.3
 };
 interface SliderWithAnimationProps {
   dataArr: CarouselData[];
@@ -89,8 +88,6 @@ class SliderWithAnimation extends React.Component<
             childProps={carouselCompProps}
             classes={null}
             childStyles={childStyles}
-            fadeOnSlide={true}
-            sizePercentageDuringSlide={70}
           >
             <SingleElement {...carouselCompProps} />
           </Slider>
