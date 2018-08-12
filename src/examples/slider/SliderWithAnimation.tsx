@@ -3,7 +3,10 @@ import injectSheet from "react-jss";
 import KeyboardLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import SingleElement from "./SingleElement";
-import Slider, { IChildStyles } from "../../packages/slider";
+import Slider, {
+  ISliderChildStyles,
+  ISliderDirection
+} from "../../packages/slider";
 import { carouselComponentStyles } from "./styles";
 import { CarouselData } from "./AppBar";
 import { carouselElemWidth, carouselElemHeight } from "./singleElemStyles";
@@ -14,10 +17,8 @@ interface SliderWithAnimationProps {
 }
 
 interface SliderWithAnimationStates {
-  currIndex: number;
-  prevIndex: number;
-  appearDirty: boolean;
-  direction: number;
+  selectedIndex: number;
+  direction: ISliderDirection;
 }
 
 class SliderWithAnimation extends React.Component<
@@ -25,54 +26,52 @@ class SliderWithAnimation extends React.Component<
   SliderWithAnimationStates
 > {
   state = {
-    currIndex: 0,
-    prevIndex: 0,
-    appearDirty: false,
-    direction: 0 // 0 for left and 1 for right
+    selectedIndex: 0,
+    direction: ISliderDirection.MoveLeft
   };
 
-  componentDidMount() {
-    this.setState({ prevIndex: this.props.dataArr.length - 1 });
-  }
-
-  slideLeftClick = () => {
-    let { currIndex } = this.state;
-    let prevIndex = currIndex;
-    if (currIndex > 0) {
-      currIndex--;
-    } else if (currIndex === 0) {
-      currIndex = this.props.dataArr.length - 1;
+  private slideLeftClick = () => {
+    let { selectedIndex } = this.state;
+    if (selectedIndex > 0) {
+      selectedIndex--;
+    } else if (selectedIndex === 0) {
+      selectedIndex = this.props.dataArr.length - 1;
     } else {
       throw Error(`Current Index of element can't go below 0`);
     }
-    this.setState({ currIndex, prevIndex, direction: 1, appearDirty: true });
+    this.setState({
+      selectedIndex,
+      direction: ISliderDirection.MoveRight
+    });
   };
 
-  slideRightClick = () => {
-    let { currIndex } = this.state;
-    let prevIndex = currIndex;
+  private slideRightClick = () => {
+    let { selectedIndex } = this.state;
     let maxIndex = this.props.dataArr.length - 1;
-    if (currIndex < maxIndex) {
-      currIndex++;
-    } else if (currIndex === maxIndex) {
-      currIndex = 0;
+    if (selectedIndex < maxIndex) {
+      selectedIndex++;
+    } else if (selectedIndex === maxIndex) {
+      selectedIndex = 0;
     } else {
       throw Error(`Current Index of element can't go beyond ${maxIndex}`);
     }
-    this.setState({ currIndex, prevIndex, direction: 0, appearDirty: true });
+    this.setState({
+      selectedIndex,
+      direction: ISliderDirection.MoveLeft
+    });
   };
 
   render() {
     const { classes, dataArr } = this.props;
-    const { direction, currIndex } = this.state;
-    const currData = dataArr[currIndex];
+    const { direction, selectedIndex } = this.state;
+    const currData = dataArr[selectedIndex];
     const carouselCompProps = {
       imageUrl: currData.imageUrl,
       title: currData.title,
       text: currData.text,
       classes: null
     };
-    const childStyles: IChildStyles = {
+    const childStyles: ISliderChildStyles = {
       width: carouselElemWidth,
       height: carouselElemHeight,
       transition: 0.3

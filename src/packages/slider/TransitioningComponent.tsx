@@ -1,15 +1,15 @@
 import * as React from "react";
 import { Transition } from "react-transition-group";
-import { IChildStyles } from "./index";
+import { ISliderChildStyles, ISliderDirection } from "./types";
 
 interface ITransitioningComponentProps {
   enter: any;
   classes: any;
-  direction: any;
+  direction: ISliderDirection;
   appear: any;
   children: any;
   parentRef: HTMLDivElement | null;
-  childStyles: IChildStyles;
+  childStyles: ISliderChildStyles;
   hideOnLeave?: boolean;
   initialShowWidthPercentage?: number;
 }
@@ -51,9 +51,10 @@ const TransitioningComponent = ({
         };
         switch (state) {
           case "entering":
-            wrapperStyles.transform = !!direction
-              ? wrapperStyleFarLeft
-              : wrapperStyleFarRight;
+            wrapperStyles.transform =
+              direction == ISliderDirection.MoveRight
+                ? wrapperStyleFarLeft
+                : wrapperStyleFarRight;
             wrapperStyles.transition = "0";
             wrapperStyles.opacity = hideOnLeave ? 0 : 1;
             break;
@@ -68,9 +69,10 @@ const TransitioningComponent = ({
             wrapperStyles.opacity = 1;
             break;
           case "exited":
-            wrapperStyles.transform = !!direction
-              ? wrapperStyleFarRight
-              : wrapperStyleFarLeft;
+            wrapperStyles.transform =
+              direction == ISliderDirection.MoveRight
+                ? wrapperStyleFarRight
+                : wrapperStyleFarLeft;
             wrapperStyles.transition = carouselTransitionTime;
             wrapperStyles.opacity = hideOnLeave ? 0 : 1;
             break;
