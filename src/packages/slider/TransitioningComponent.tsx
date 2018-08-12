@@ -32,9 +32,6 @@ const TransitioningComponent = ({
   }
   let farDistance = childStyles.width + carouselElemMargin;
   if (hideOnLeave && initialShowWidthPercentage) {
-    // farDistance =
-    //   childStyles.width -
-    //   (childStyles.width * initialShowWidthPercentage) / 100;
     farDistance = childStyles.width * (1 - initialShowWidthPercentage / 100);
   }
   const wrapperStyleFarRight = `translate3d(${farDistance}px, 0, 0)`;
