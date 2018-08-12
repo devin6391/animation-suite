@@ -5,8 +5,22 @@ export interface ISliderChildStyles {
 }
 
 export const enum ISliderDirection {
-  MoveLeft = 0,
-  MoveRight = 1,
-  MoveUp = 2,
-  MoveDown = 3
+  MoveLeft,
+  MoveRight,
+  MoveUp,
+  MoveDown
 }
+
+export interface IWrapperStyles {
+  transform: string;
+  transition: string;
+  opacity: number;
+}
+
+export type TransitionStateTypes =
+  | "enter"
+  | "entering"
+  | "entered"
+  | "exit"
+  | "exiting"
+  | "exited";

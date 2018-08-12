@@ -41,7 +41,7 @@ class SliderWithAnimation extends React.Component<
     }
     this.setState({
       selectedIndex,
-      direction: ISliderDirection.MoveRight
+      direction: ISliderDirection.MoveDown
     });
   };
 
@@ -57,7 +57,7 @@ class SliderWithAnimation extends React.Component<
     }
     this.setState({
       selectedIndex,
-      direction: ISliderDirection.MoveLeft
+      direction: ISliderDirection.MoveUp
     });
   };
 

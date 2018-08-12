@@ -12,8 +12,8 @@ interface ICarouselProps {
   children: JSX.Element;
   childStyles: ISliderChildStyles;
   slideOnAppear?: boolean;
-  hideOnLeave?: boolean;
-  initialShowWidthPercentage?: number;
+  fadeOnSlide?: boolean;
+  sizePercentageDuringSLide?: number;
 }
 
 interface ICarouselState {
@@ -60,8 +60,8 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
       classes,
       childStyles,
       slideOnAppear,
-      hideOnLeave,
-      initialShowWidthPercentage
+      fadeOnSlide,
+      sizePercentageDuringSLide
     } = this.props;
     let clonedElems = [];
     nextWatchProp &&
@@ -75,8 +75,8 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
           appear={slideOnAppear || !!prevWatchProp}
           parentRef={this.selfRef}
           childStyles={childStyles}
-          hideOnLeave={hideOnLeave}
-          initialShowWidthPercentage={initialShowWidthPercentage}
+          fadeOnSlide={fadeOnSlide}
+          sizePercentageDuringSLide={sizePercentageDuringSLide}
         >
           {React.cloneElement(this.props.children, nextChildProps)}
         </TransitioningComponent>
@@ -93,8 +93,8 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
           appear={true}
           parentRef={this.selfRef}
           childStyles={childStyles}
-          hideOnLeave={hideOnLeave}
-          initialShowWidthPercentage={initialShowWidthPercentage}
+          fadeOnSlide={fadeOnSlide}
+          sizePercentageDuringSLide={sizePercentageDuringSLide}
         >
           {React.cloneElement(this.props.children, prevChildProps)}
         </TransitioningComponent>

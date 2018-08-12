@@ -1,6 +1,11 @@
 import * as React from "react";
 import { Transition } from "react-transition-group";
-import { ISliderChildStyles, ISliderDirection } from "./types";
+import {
+  ISliderChildStyles,
+  ISliderDirection,
+  TransitionStateTypes,
+  IWrapperStyles
+} from "./types";
 
 interface ITransitioningComponentProps {
   enter: any;
@@ -10,83 +15,163 @@ interface ITransitioningComponentProps {
   children: any;
   parentRef: HTMLDivElement | null;
   childStyles: ISliderChildStyles;
-  hideOnLeave?: boolean;
-  initialShowWidthPercentage?: number;
+  fadeOnSlide?: boolean;
+  sizePercentageDuringSLide?: number;
 }
 
-const TransitioningComponent = ({
-  enter,
-  classes,
-  direction,
-  appear,
-  children,
-  parentRef,
-  childStyles,
-  hideOnLeave,
-  initialShowWidthPercentage
-}: ITransitioningComponentProps) => {
-  let carouselElemMargin = 0;
-  if (parentRef && parentRef.parentElement) {
-    carouselElemMargin =
-      parentRef.parentElement.offsetWidth - childStyles.width;
+export default class TransitioningComponent extends React.Component<
+  ITransitioningComponentProps
+> {
+  private get sliderHorizontalMargin(): number {
+    let { parentRef, childStyles } = this.props;
+    let carouselElemMargin = 0;
+    if (parentRef && parentRef.parentElement) {
+      carouselElemMargin =
+        parentRef.parentElement.offsetWidth - childStyles.width;
+    }
+    return carouselElemMargin;
   }
-  let farDistance = childStyles.width + carouselElemMargin;
-  if (hideOnLeave && initialShowWidthPercentage) {
-    farDistance = childStyles.width * (1 - initialShowWidthPercentage / 100);
-  }
-  const wrapperStyleFarRight = `translate3d(${farDistance}px, 0, 0)`;
-  const wrapperStyleFarLeft = `translate3d(-${farDistance}px, 0, 0)`;
-  const wrapperStyleFCenter = "translate3d(0, 0, 0)";
-  const carouselTransitionTime = childStyles.transition + "s";
-  return (
-    <Transition in={enter} timeout={1} appear={appear}>
-      {state => {
-        let wrapperStyles = {
-          transform: wrapperStyleFarRight,
-          transition: "0",
-          opacity: 1
-        };
-        switch (state) {
-          case "entering":
-            wrapperStyles.transform =
-              direction == ISliderDirection.MoveRight
-                ? wrapperStyleFarLeft
-                : wrapperStyleFarRight;
-            wrapperStyles.transition = "0";
-            wrapperStyles.opacity = hideOnLeave ? 0 : 1;
-            break;
-          case "entered":
-            wrapperStyles.transform = wrapperStyleFCenter;
-            wrapperStyles.transition = carouselTransitionTime;
-            wrapperStyles.opacity = 1;
-            break;
-          case "exiting":
-            wrapperStyles.transform = wrapperStyleFCenter;
-            wrapperStyles.transition = "0";
-            wrapperStyles.opacity = 1;
-            break;
-          case "exited":
-            wrapperStyles.transform =
-              direction == ISliderDirection.MoveRight
-                ? wrapperStyleFarRight
-                : wrapperStyleFarLeft;
-            wrapperStyles.transition = carouselTransitionTime;
-            wrapperStyles.opacity = hideOnLeave ? 0 : 1;
-            break;
-          default:
-            throw new Error("Transition has no state");
-        }
-        return (
-          <div
-            className={classes.rtgWrapper}
-            style={{ ...wrapperStyles, width: childStyles.width }}
-          >
-            {children}
-          </div>
-        );
-      }}
-    </Transition>
-  );
-};
 
-export default TransitioningComponent;
+  private get sliderVerticalMargin(): number {
+    let { parentRef, childStyles } = this.props;
+    let carouselElemMargin = 0;
+    if (parentRef && parentRef.parentElement) {
+      carouselElemMargin =
+        parentRef.parentElement.offsetHeight - childStyles.height;
+    }
+    return carouselElemMargin;
+  }
+
+  private get horizontalFarDistance(): number {
+    let { sizePercentageDuringSLide, childStyles, fadeOnSlide } = this.props;
+    let farDistance = childStyles.width + this.sliderHorizontalMargin;
+    if (fadeOnSlide && sizePercentageDuringSLide) {
+      farDistance = childStyles.width * (1 - sizePercentageDuringSLide / 100);
+    }
+    return farDistance;
+  }
+
+  private get verticalFarDistance(): number {
+    let { sizePercentageDuringSLide, childStyles, fadeOnSlide } = this.props;
+    let farDistance = childStyles.height + this.sliderVerticalMargin;
+    if (fadeOnSlide && sizePercentageDuringSLide) {
+      farDistance = childStyles.height * (1 - sizePercentageDuringSLide / 100);
+    }
+    return farDistance;
+  }
+
+  private get wrapperStyleFarRight(): string {
+    return `translate3d(${this.horizontalFarDistance}px, 0, 0)`;
+  }
+  private get wrapperStyleFarLeft(): string {
+    return `translate3d(-${this.horizontalFarDistance}px, 0, 0)`;
+  }
+  private get wrapperStyleFarUp(): string {
+    return `translate3d(0, -${this.verticalFarDistance}px, 0)`;
+  }
+  private get wrapperStyleFarDown(): string {
+    return `translate3d(0, ${this.verticalFarDistance}px, 0)`;
+  }
+  private get wrapperStyleFCenter(): string {
+    return "translate3d(0, 0, 0)";
+  }
+  private get carouselTransitionTime(): string {
+    return this.props.childStyles.transition + "s";
+  }
+
+  private get enteringTransform(): string {
+    let { direction } = this.props;
+    switch (direction) {
+      case ISliderDirection.MoveRight:
+        return this.wrapperStyleFarLeft;
+      case ISliderDirection.MoveLeft:
+        return this.wrapperStyleFarRight;
+      case ISliderDirection.MoveUp:
+        return this.wrapperStyleFarDown;
+      case ISliderDirection.MoveDown:
+        return this.wrapperStyleFarUp;
+      default:
+        throw new Error("No direction present");
+    }
+  }
+
+  private get exitingTransform(): string {
+    let { direction } = this.props;
+    switch (direction) {
+      case ISliderDirection.MoveRight:
+        return this.wrapperStyleFarRight;
+      case ISliderDirection.MoveLeft:
+        return this.wrapperStyleFarLeft;
+      case ISliderDirection.MoveUp:
+        return this.wrapperStyleFarUp;
+      case ISliderDirection.MoveDown:
+        return this.wrapperStyleFarDown;
+      default:
+        throw new Error("No direction present");
+    }
+  }
+
+  render() {
+    let {
+      enter,
+      classes,
+      appear,
+      children,
+      childStyles,
+      fadeOnSlide
+    } = this.props;
+
+    const wrapperStyleFCenter = this.wrapperStyleFCenter;
+    const carouselTransitionTime = this.carouselTransitionTime;
+    const enteringTransform = this.enteringTransform;
+    const exitingTransform = this.exitingTransform;
+
+    return (
+      <Transition in={enter} timeout={1} appear={appear}>
+        {(state: TransitionStateTypes) => {
+          let wrapperStyles: IWrapperStyles;
+          switch (state) {
+            case "entering":
+              wrapperStyles = {
+                transform: enteringTransform,
+                transition: "0",
+                opacity: fadeOnSlide ? 0 : 1
+              };
+              break;
+            case "entered":
+              wrapperStyles = {
+                transform: wrapperStyleFCenter,
+                transition: carouselTransitionTime,
+                opacity: 1
+              };
+              break;
+            case "exiting":
+              wrapperStyles = {
+                transform: wrapperStyleFCenter,
+                transition: "0",
+                opacity: 1
+              };
+              break;
+            case "exited":
+              wrapperStyles = {
+                transform: exitingTransform,
+                transition: carouselTransitionTime,
+                opacity: fadeOnSlide ? 0 : 1
+              };
+              break;
+            default:
+              throw new Error("Transition has no state");
+          }
+          return (
+            <div
+              className={classes.rtgWrapper}
+              style={{ ...wrapperStyles, width: childStyles.width }}
+            >
+              {children}
+            </div>
+          );
+        }}
+      </Transition>
+    );
+  }
+}
