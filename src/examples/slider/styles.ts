@@ -31,7 +31,7 @@ export const carouselComponentStyles: StyleSheet<any> = {
   carouselContainer: {
     flex: 6,
     display: "flex",
-    overflowX: "hidden"
+    overflow: "hidden"
   },
   rightMove: {
     ...carouselArrowStyle

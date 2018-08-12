@@ -11,6 +11,13 @@ import { carouselComponentStyles } from "./styles";
 import { CarouselData } from "./AppBar";
 import { carouselElemWidth, carouselElemHeight } from "./singleElemStyles";
 
+const childStyles: ISliderChildStyles = {
+  width: carouselElemWidth,
+  height: carouselElemHeight,
+  transition: 0.3,
+  enterTimingFunction: "ease-out",
+  exitTimingFunction: "ease-in"
+};
 interface SliderWithAnimationProps {
   dataArr: CarouselData[];
   classes: any;
@@ -41,7 +48,7 @@ class SliderWithAnimation extends React.Component<
     }
     this.setState({
       selectedIndex,
-      direction: ISliderDirection.MoveDown
+      direction: ISliderDirection.MoveRight
     });
   };
 
@@ -57,7 +64,7 @@ class SliderWithAnimation extends React.Component<
     }
     this.setState({
       selectedIndex,
-      direction: ISliderDirection.MoveUp
+      direction: ISliderDirection.MoveLeft
     });
   };
 
@@ -71,11 +78,6 @@ class SliderWithAnimation extends React.Component<
       text: currData.text,
       classes: null
     };
-    const childStyles: ISliderChildStyles = {
-      width: carouselElemWidth,
-      height: carouselElemHeight,
-      transition: 0.3
-    };
     return (
       <div className={classes.root}>
         <div className={classes.leftMove} onClick={this.slideLeftClick}>
@@ -88,6 +90,8 @@ class SliderWithAnimation extends React.Component<
             childProps={carouselCompProps}
             classes={null}
             childStyles={childStyles}
+            fadeOnSlide={true}
+            sizePercentageDuringSLide={70}
           >
             <SingleElement {...carouselCompProps} />
           </Slider>

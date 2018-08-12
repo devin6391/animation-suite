@@ -72,7 +72,7 @@ export default class TransitioningComponent extends React.Component<
   private get wrapperStyleFarDown(): string {
     return `translate3d(0, ${this.verticalFarDistance}px, 0)`;
   }
-  private get wrapperStyleFCenter(): string {
+  private get wrapperTransformCenter(): string {
     return "translate3d(0, 0, 0)";
   }
   private get carouselTransitionTime(): string {
@@ -111,6 +111,15 @@ export default class TransitioningComponent extends React.Component<
     }
   }
 
+  private getWrapperStyles(
+    transform: string,
+    transition: string,
+    opacity: number,
+    transitionTimingFunction?: string
+  ): IWrapperStyles {
+    return { transform, transition, opacity, transitionTimingFunction };
+  }
+
   render() {
     let {
       enter,
@@ -121,7 +130,7 @@ export default class TransitioningComponent extends React.Component<
       fadeOnSlide
     } = this.props;
 
-    const wrapperStyleFCenter = this.wrapperStyleFCenter;
+    const wrapperTransformCenter = this.wrapperTransformCenter;
     const carouselTransitionTime = this.carouselTransitionTime;
     const enteringTransform = this.enteringTransform;
     const exitingTransform = this.exitingTransform;
@@ -132,32 +141,34 @@ export default class TransitioningComponent extends React.Component<
           let wrapperStyles: IWrapperStyles;
           switch (state) {
             case "entering":
-              wrapperStyles = {
-                transform: enteringTransform,
-                transition: "0",
-                opacity: fadeOnSlide ? 0 : 1
-              };
+              wrapperStyles = this.getWrapperStyles(
+                enteringTransform,
+                "0",
+                fadeOnSlide ? 0 : 1
+              );
               break;
             case "entered":
-              wrapperStyles = {
-                transform: wrapperStyleFCenter,
-                transition: carouselTransitionTime,
-                opacity: 1
-              };
+              wrapperStyles = this.getWrapperStyles(
+                wrapperTransformCenter,
+                carouselTransitionTime,
+                1,
+                childStyles.enterTimingFunction || "linear"
+              );
               break;
             case "exiting":
-              wrapperStyles = {
-                transform: wrapperStyleFCenter,
-                transition: "0",
-                opacity: 1
-              };
+              wrapperStyles = this.getWrapperStyles(
+                wrapperTransformCenter,
+                "0",
+                1
+              );
               break;
             case "exited":
-              wrapperStyles = {
-                transform: exitingTransform,
-                transition: carouselTransitionTime,
-                opacity: fadeOnSlide ? 0 : 1
-              };
+              wrapperStyles = this.getWrapperStyles(
+                exitingTransform,
+                carouselTransitionTime,
+                fadeOnSlide ? 0 : 1,
+                childStyles.exitTimingFunction || "linear"
+              );
               break;
             default:
               throw new Error("Transition has no state");
