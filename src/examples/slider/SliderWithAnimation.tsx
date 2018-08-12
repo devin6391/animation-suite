@@ -90,7 +90,7 @@ class SliderWithAnimation extends React.Component<
             classes={null}
             childStyles={childStyles}
             fadeOnSlide={true}
-            sizePercentageDuringSLide={70}
+            sizePercentageDuringSlide={70}
           >
             <SingleElement {...carouselCompProps} />
           </Slider>

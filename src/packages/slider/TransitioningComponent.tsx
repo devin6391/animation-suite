@@ -8,75 +8,90 @@ import {
 } from "./types";
 
 interface ITransitioningComponentProps {
-  enter: any;
-  classes: any;
-  direction: ISliderDirection;
-  appear: any;
-  children: any;
-  parentRef: HTMLDivElement | null;
-  childStyles: ISliderChildStyles;
-  fadeOnSlide?: boolean;
-  sizePercentageDuringSLide?: number;
-  timeout: number;
+  enter: any; // If true then this will enter in screen.
+  classes: any; // JSS classes.
+  direction: ISliderDirection; // Direction in which transition should take place.
+  appear: any; // Should appear on first.
+  children: any; // The child JSX passed to render
+  parentRef: HTMLDivElement | null; // Reference of Slider component. Useful for getting it's parent width/height.
+  childStyles: ISliderChildStyles; // Style for contained transitions.
+  fadeOnSlide?: boolean; // Should it fade with transitions.
+  sizePercentageDuringSlide?: number; // Percentage of size which should be there even if exit/enter is done. Useful only with fadeOnSlide prop.
+  timeout: number; // Timeout under which transition should happen.
 }
 
 export default class TransitioningComponent extends React.Component<
   ITransitioningComponentProps
 > {
+  // Getter method for calculating horizontal margin. Useful when sliding direction is right/left.
   private get sliderHorizontalMargin(): number {
     let { parentRef, childStyles } = this.props;
-    let carouselElemMargin = 0;
+    let sliderElemMargin = 0;
     if (parentRef && parentRef.parentElement) {
-      carouselElemMargin =
+      sliderElemMargin =
         parentRef.parentElement.offsetWidth - childStyles.width;
     }
-    return carouselElemMargin;
+    return sliderElemMargin;
   }
 
+  // Getter method for calculating vertical margin. Useful when sliding direction is up/down.
   private get sliderVerticalMargin(): number {
     let { parentRef, childStyles } = this.props;
-    let carouselElemMargin = 0;
+    let sliderElemMargin = 0;
     if (parentRef && parentRef.parentElement) {
-      carouselElemMargin =
+      sliderElemMargin =
         parentRef.parentElement.offsetHeight - childStyles.height;
     }
-    return carouselElemMargin;
+    return sliderElemMargin;
   }
 
+  // Getter method for calculating the horizontal distance an element must travel. Useful when sliding direction is right/left.
   private get horizontalFarDistance(): number {
-    let { sizePercentageDuringSLide, childStyles, fadeOnSlide } = this.props;
+    let { sizePercentageDuringSlide, childStyles, fadeOnSlide } = this.props;
     let farDistance = childStyles.width + this.sliderHorizontalMargin;
-    if (fadeOnSlide && sizePercentageDuringSLide) {
-      farDistance = childStyles.width * (1 - sizePercentageDuringSLide / 100);
+    if (fadeOnSlide && sizePercentageDuringSlide) {
+      farDistance = childStyles.width * (1 - sizePercentageDuringSlide / 100);
     }
     return farDistance;
   }
 
+  // Getter method for calculating vertical distance an element must travel. Useful when sliding direction is up/down.
   private get verticalFarDistance(): number {
-    let { sizePercentageDuringSLide, childStyles, fadeOnSlide } = this.props;
+    let { sizePercentageDuringSlide, childStyles, fadeOnSlide } = this.props;
     let farDistance = childStyles.height + this.sliderVerticalMargin;
-    if (fadeOnSlide && sizePercentageDuringSLide) {
-      farDistance = childStyles.height * (1 - sizePercentageDuringSLide / 100);
+    if (fadeOnSlide && sizePercentageDuringSlide) {
+      farDistance = childStyles.height * (1 - sizePercentageDuringSlide / 100);
     }
     return farDistance;
   }
 
+  // Getter method for transform style if component is at right and is invisible. Useful when sliding direction is right/left.
   private get wrapperStyleFarRight(): string {
     return `translate3d(${this.horizontalFarDistance}px, 0, 0)`;
   }
+
+  // Getter method for transform style if component is at left and is invisible. Useful when sliding direction is right/left.
   private get wrapperStyleFarLeft(): string {
     return `translate3d(-${this.horizontalFarDistance}px, 0, 0)`;
   }
+
+  // Getter method for transform style if component is at up and is invisible. Useful when sliding direction is up/down.
   private get wrapperStyleFarUp(): string {
     return `translate3d(0, -${this.verticalFarDistance}px, 0)`;
   }
+
+  // Getter method for transform style if component is at down and is invisible. Useful when sliding direction is up/down.
   private get wrapperStyleFarDown(): string {
     return `translate3d(0, ${this.verticalFarDistance}px, 0)`;
   }
+
+  // Getter method for transform style if component is at center.
   private get wrapperTransformCenter(): string {
     return "translate3d(0, 0, 0)";
   }
-  private get carouselTransitionExitTime(): string {
+
+  // Getter method to calculate transition exit time.
+  private get sliderTransitionExitTime(): string {
     let { transitionTime, exitTransitionTime } = this.props.childStyles;
     const time = exitTransitionTime || transitionTime;
     if (!time) {
@@ -86,7 +101,9 @@ export default class TransitioningComponent extends React.Component<
     }
     return time + "s";
   }
-  private get carouselTransitionEnterTime(): string {
+
+  // Getter method to calculate transition enter time.
+  private get sliderTransitionEnterTime(): string {
     let { transitionTime, enterTransitionTime } = this.props.childStyles;
     const time = enterTransitionTime || transitionTime;
     if (!time) {
@@ -97,16 +114,19 @@ export default class TransitioningComponent extends React.Component<
     return time + "s";
   }
 
-  private get carouselEnterTimingFunction(): string {
+  // Getter method to calculate transition enter timing function css property.
+  private get sliderEnterTimingFunction(): string {
     let { timingFunction, enterTimingFunction } = this.props.childStyles;
     return enterTimingFunction || timingFunction || "linear";
   }
 
-  private get carouselExitTimingFunction(): string {
+  // Getter method to calculate transition exit timing function css property.
+  private get sliderExitTimingFunction(): string {
     let { timingFunction, exitTimingFunction } = this.props.childStyles;
     return exitTimingFunction || timingFunction || "linear";
   }
 
+  // Getter method to calculate css transform of entering element according to direction in which it will be transitioning.
   private get enteringTransform(): string {
     let { direction } = this.props;
     switch (direction) {
@@ -123,6 +143,7 @@ export default class TransitioningComponent extends React.Component<
     }
   }
 
+  // Getter method to calculate css transform of exiting element according to direction in which it will be transitioning.
   private get exitingTransform(): string {
     let { direction } = this.props;
     switch (direction) {
@@ -139,6 +160,7 @@ export default class TransitioningComponent extends React.Component<
     }
   }
 
+  // Getter method to calculate all css styles to be applied on child.
   private getWrapperStyles(
     transform: string,
     transition: string,
@@ -159,13 +181,15 @@ export default class TransitioningComponent extends React.Component<
       timeout
     } = this.props;
 
+    // These constants are being put here because the getter properties could get exact value before transition starts.
+    // Putting it inside transition rendered block could produce undeterinistic values.
     const wrapperTransformCenter = this.wrapperTransformCenter;
-    const carouselTransitionExitTime = this.carouselTransitionExitTime;
-    const carouselTransitionEnterTime = this.carouselTransitionEnterTime;
+    const sliderTransitionExitTime = this.sliderTransitionExitTime;
+    const sliderTransitionEnterTime = this.sliderTransitionEnterTime;
     const enteringTransform = this.enteringTransform;
     const exitingTransform = this.exitingTransform;
-    const carouselEnterTimingFunction = this.carouselEnterTimingFunction;
-    const carouselExitTimingFunction = this.carouselExitTimingFunction;
+    const sliderEnterTimingFunction = this.sliderEnterTimingFunction;
+    const sliderExitTimingFunction = this.sliderExitTimingFunction;
 
     return (
       <Transition in={enter} timeout={timeout} appear={appear}>
@@ -182,9 +206,9 @@ export default class TransitioningComponent extends React.Component<
             case "entered":
               wrapperStyles = this.getWrapperStyles(
                 wrapperTransformCenter,
-                carouselTransitionEnterTime,
+                sliderTransitionEnterTime,
                 1,
-                carouselEnterTimingFunction
+                sliderEnterTimingFunction
               );
               break;
             case "exiting":
@@ -197,9 +221,9 @@ export default class TransitioningComponent extends React.Component<
             case "exited":
               wrapperStyles = this.getWrapperStyles(
                 exitingTransform,
-                carouselTransitionExitTime,
+                sliderTransitionExitTime,
                 fadeOnSlide ? 0 : 1,
-                carouselExitTimingFunction
+                sliderExitTimingFunction
               );
               break;
             default:

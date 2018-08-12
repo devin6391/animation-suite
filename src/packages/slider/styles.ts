@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-jss";
 
-const carouselStyle: StyleSheet<any> = {
+const sliderStyles: StyleSheet<any> = {
   rtgList: {
     display: "flex",
     position: "relative",
@@ -13,4 +13,4 @@ const carouselStyle: StyleSheet<any> = {
   }
 };
 
-export default carouselStyle;
+export default sliderStyles;

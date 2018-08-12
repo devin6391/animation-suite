@@ -1,30 +1,30 @@
 import * as React from "react";
-import carouselStyle from "./styles";
+import sliderStyles from "./styles";
 import injectSheet from "react-jss";
 import TransitioningComponent from "./TransitioningComponent";
 import { ISliderChildStyles, ISliderDirection } from "./types";
 
-interface ICarouselProps {
-  watchProp: any;
-  childProps: any;
-  direction: ISliderDirection;
-  classes: any;
-  children: JSX.Element;
-  childStyles: ISliderChildStyles;
-  slideOnAppear?: boolean;
-  fadeOnSlide?: boolean;
-  sizePercentageDuringSLide?: number;
+interface ISliderProps {
+  watchProp: any; // The property to watch if on which sliding will occur. This must be a literal value.
+  childProps: any; // The properties of child element.
+  direction: ISliderDirection; // The direction in which this change's sliding effect should go.
+  classes: any; // These are passed from JSS so it should be null, no support for external classes for now.
+  children: JSX.Element; // This child JSX element wrapped in Slider component on which sliding effect will happen.
+  childStyles: ISliderChildStyles; // Some styles of children, which includes width, height and transition timing related styles.
+  slideOnAppear?: boolean; // If we want the sliding effect when we first see the screen.
+  fadeOnSlide?: boolean; // Should the slide fade on entering or exiting.
+  sizePercentageDuringSlide?: number; // Percentage of size which should be there even if exit/enter is done. Useful only with fadeOnSlide prop.
 }
 
-interface ICarouselState {
-  prevWatchProp: any;
-  prevChildProps: any;
-  nextWatchProp: any;
-  nextChildProps: any;
+interface ISliderState {
+  prevWatchProp: any; // prev watch prop value.
+  prevChildProps: any; // prev properties of child.
+  nextWatchProp: any; // new watch prop value.
+  nextChildProps: any; // new properties of child.
 }
 
-class Carousel extends React.Component<ICarouselProps, ICarouselState> {
-  constructor(props: ICarouselProps) {
+class Slider extends React.Component<ISliderProps, ISliderState> {
+  constructor(props: ISliderProps) {
     super(props);
     this.state = {
       prevWatchProp: null,
@@ -37,8 +37,8 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
   private selfRef: HTMLDivElement | null;
 
   static getDerivedStateFromProps(
-    nextProps: ICarouselProps,
-    prevState: ICarouselState
+    nextProps: ISliderProps,
+    prevState: ISliderState
   ) {
     return {
       prevWatchProp: prevState.nextWatchProp,
@@ -48,7 +48,10 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     };
   }
 
-  getCLonedElems = () => {
+  /**
+   * This method makes two clones of child. One with current properties which will enter and another with previous properties which will exit.
+   */
+  private getCLonedElems = () => {
     const {
       prevWatchProp,
       prevChildProps,
@@ -61,7 +64,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
       childStyles,
       slideOnAppear,
       fadeOnSlide,
-      sizePercentageDuringSLide
+      sizePercentageDuringSlide
     } = this.props;
     let clonedElems = [];
     nextWatchProp &&
@@ -76,7 +79,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
           parentRef={this.selfRef}
           childStyles={childStyles}
           fadeOnSlide={fadeOnSlide}
-          sizePercentageDuringSLide={sizePercentageDuringSLide}
+          sizePercentageDuringSlide={sizePercentageDuringSlide}
           timeout={1}
         >
           {React.cloneElement(this.props.children, nextChildProps)}
@@ -95,7 +98,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
           parentRef={this.selfRef}
           childStyles={childStyles}
           fadeOnSlide={fadeOnSlide}
-          sizePercentageDuringSLide={sizePercentageDuringSLide}
+          sizePercentageDuringSlide={sizePercentageDuringSlide}
           timeout={1}
         >
           {React.cloneElement(this.props.children, prevChildProps)}
@@ -121,4 +124,4 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
   }
 }
 
-export default injectSheet(carouselStyle)(Carousel);
+export default injectSheet(sliderStyles)(Slider);
