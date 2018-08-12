@@ -77,6 +77,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
           childStyles={childStyles}
           fadeOnSlide={fadeOnSlide}
           sizePercentageDuringSLide={sizePercentageDuringSLide}
+          timeout={1}
         >
           {React.cloneElement(this.props.children, nextChildProps)}
         </TransitioningComponent>
@@ -95,6 +96,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
           childStyles={childStyles}
           fadeOnSlide={fadeOnSlide}
           sizePercentageDuringSLide={sizePercentageDuringSLide}
+          timeout={1}
         >
           {React.cloneElement(this.props.children, prevChildProps)}
         </TransitioningComponent>

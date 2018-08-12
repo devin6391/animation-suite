@@ -14,9 +14,8 @@ import { carouselElemWidth, carouselElemHeight } from "./singleElemStyles";
 const childStyles: ISliderChildStyles = {
   width: carouselElemWidth,
   height: carouselElemHeight,
-  transition: 0.3,
-  enterTimingFunction: "ease-out",
-  exitTimingFunction: "ease-in"
+  enterTransitionTime: 0.6,
+  exitTransitionTime: 0.3
 };
 interface SliderWithAnimationProps {
   dataArr: CarouselData[];

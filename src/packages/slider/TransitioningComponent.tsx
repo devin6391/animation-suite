@@ -17,6 +17,7 @@ interface ITransitioningComponentProps {
   childStyles: ISliderChildStyles;
   fadeOnSlide?: boolean;
   sizePercentageDuringSLide?: number;
+  timeout: number;
 }
 
 export default class TransitioningComponent extends React.Component<
@@ -75,8 +76,35 @@ export default class TransitioningComponent extends React.Component<
   private get wrapperTransformCenter(): string {
     return "translate3d(0, 0, 0)";
   }
-  private get carouselTransitionTime(): string {
-    return this.props.childStyles.transition + "s";
+  private get carouselTransitionExitTime(): string {
+    let { transitionTime, exitTransitionTime } = this.props.childStyles;
+    const time = exitTransitionTime || transitionTime;
+    if (!time) {
+      throw new Error(
+        "Either exitTransitionTime or transitionTime should be present as props"
+      );
+    }
+    return time + "s";
+  }
+  private get carouselTransitionEnterTime(): string {
+    let { transitionTime, enterTransitionTime } = this.props.childStyles;
+    const time = enterTransitionTime || transitionTime;
+    if (!time) {
+      throw new Error(
+        "Either enterTransitionTime or transitionTime should be present as props"
+      );
+    }
+    return time + "s";
+  }
+
+  private get carouselEnterTimingFunction(): string {
+    let { timingFunction, enterTimingFunction } = this.props.childStyles;
+    return enterTimingFunction || timingFunction || "linear";
+  }
+
+  private get carouselExitTimingFunction(): string {
+    let { timingFunction, exitTimingFunction } = this.props.childStyles;
+    return exitTimingFunction || timingFunction || "linear";
   }
 
   private get enteringTransform(): string {
@@ -127,16 +155,20 @@ export default class TransitioningComponent extends React.Component<
       appear,
       children,
       childStyles,
-      fadeOnSlide
+      fadeOnSlide,
+      timeout
     } = this.props;
 
     const wrapperTransformCenter = this.wrapperTransformCenter;
-    const carouselTransitionTime = this.carouselTransitionTime;
+    const carouselTransitionExitTime = this.carouselTransitionExitTime;
+    const carouselTransitionEnterTime = this.carouselTransitionEnterTime;
     const enteringTransform = this.enteringTransform;
     const exitingTransform = this.exitingTransform;
+    const carouselEnterTimingFunction = this.carouselEnterTimingFunction;
+    const carouselExitTimingFunction = this.carouselExitTimingFunction;
 
     return (
-      <Transition in={enter} timeout={1} appear={appear}>
+      <Transition in={enter} timeout={timeout} appear={appear}>
         {(state: TransitionStateTypes) => {
           let wrapperStyles: IWrapperStyles;
           switch (state) {
@@ -150,9 +182,9 @@ export default class TransitioningComponent extends React.Component<
             case "entered":
               wrapperStyles = this.getWrapperStyles(
                 wrapperTransformCenter,
-                carouselTransitionTime,
+                carouselTransitionEnterTime,
                 1,
-                childStyles.enterTimingFunction || "linear"
+                carouselEnterTimingFunction
               );
               break;
             case "exiting":
@@ -165,9 +197,9 @@ export default class TransitioningComponent extends React.Component<
             case "exited":
               wrapperStyles = this.getWrapperStyles(
                 exitingTransform,
-                carouselTransitionTime,
+                carouselTransitionExitTime,
                 fadeOnSlide ? 0 : 1,
-                childStyles.exitTimingFunction || "linear"
+                carouselExitTimingFunction
               );
               break;
             default:

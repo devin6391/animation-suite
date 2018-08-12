@@ -1,7 +1,10 @@
 export interface ISliderChildStyles {
   width: number;
   height: number;
-  transition: number;
+  transitionTime?: number;
+  enterTransitionTime?: number;
+  exitTransitionTime?: number;
+  timingFunction?: string;
   enterTimingFunction?: string;
   exitTimingFunction?: string;
 }
