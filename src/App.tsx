@@ -8,7 +8,7 @@ class App extends React.Component {
     return (
       <Router>
         <div>
-          <Route exact path="/carousel" component={AppBar} />
+          <Route exact path="/slider" component={AppBar} />
         </div>
       </Router>
     );

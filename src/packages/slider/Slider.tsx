@@ -5,7 +5,7 @@ import TransitioningComponent from "./TransitioningComponent";
 import { ISliderChildStyles, ISliderDirection } from "./types";
 
 interface ISliderProps {
-  watchProp: any; // The property to watch if on which sliding will occur. This must be a literal value.
+  watchProp: any; // The property to watch on which sliding will occur. This must be a literal value.
   childProps: any; // The properties of child element.
   direction: ISliderDirection; // The direction in which this change's sliding effect should go.
   classes: any; // These are passed from JSS so it should be null, no support for external classes for now.

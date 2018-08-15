@@ -3,10 +3,7 @@ import injectSheet from "react-jss";
 import KeyboardLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import SingleElement from "./SingleElement";
-import Slider, {
-  ISliderChildStyles,
-  ISliderDirection
-} from "../../packages/slider";
+import Slider, { ISliderChildStyles, ISliderDirection } from "as-slider";
 import { carouselComponentStyles } from "./styles";
 import { CarouselData } from "./AppBar";
 import { carouselElemWidth, carouselElemHeight } from "./singleElemStyles";
